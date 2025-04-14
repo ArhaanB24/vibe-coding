@@ -36,64 +36,64 @@ public class TaskManagerApp extends JFrame {
         // Main Panel with split panes
         JSplitPane mainSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         mainSplitPane.setDividerLocation(400);
-        
+
         // Task List Panel
         JPanel taskListPanel = new JPanel(new BorderLayout());
-        
+
         // Search and Filter Panel
         JPanel searchFilterPanel = new JPanel(new BorderLayout());
-        
+
         // Search Panel
         JPanel searchPanel = new JPanel(new BorderLayout());
         JTextField searchField = new JTextField();
         JButton searchButton = new JButton("Search");
         searchPanel.add(searchField, BorderLayout.CENTER);
         searchPanel.add(searchButton, BorderLayout.EAST);
-        
+
         // Filter Panel
         JPanel filterPanel = new JPanel(new GridLayout(1, 5, 5, 5));
         JLabel categoryLabel = new JLabel("Category:");
         categoryFilter = new JComboBox<>(categories);
-        
+
         JLabel priorityLabel = new JLabel("Priority:");
         priorityFilter = new JComboBox<>(priorities);
-        
+
         resetFilterButton = new JButton("Reset Filters");
-        
+
         filterPanel.add(categoryLabel);
         filterPanel.add(categoryFilter);
         filterPanel.add(priorityLabel);
         filterPanel.add(priorityFilter);
         filterPanel.add(resetFilterButton);
-        
+
         searchFilterPanel.add(searchPanel, BorderLayout.NORTH);
         searchFilterPanel.add(filterPanel, BorderLayout.SOUTH);
-        
+
         // Task List
         JList<String> taskList = new JList<>(taskListModel);
         taskList.setFont(new Font("Arial", Font.PLAIN, 16));
         JScrollPane scrollPane = new JScrollPane(taskList);
-        
+
         taskListPanel.add(searchFilterPanel, BorderLayout.NORTH);
         taskListPanel.add(scrollPane, BorderLayout.CENTER);
-        
+
         // Task Description Panel
         JPanel descriptionPanel = new JPanel(new BorderLayout());
-        
+
         JLabel descriptionLabel = new JLabel("Task Details:");
         descriptionLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        
+
         taskDescriptionArea = new JTextArea();
         taskDescriptionArea.setFont(new Font("Arial", Font.PLAIN, 14));
         taskDescriptionArea.setEditable(false);
-        
+
         descriptionPanel.add(descriptionLabel, BorderLayout.NORTH);
         descriptionPanel.add(new JScrollPane(taskDescriptionArea), BorderLayout.CENTER);
-        
+
         // Add panels to split pane
         mainSplitPane.setLeftComponent(taskListPanel);
         mainSplitPane.setRightComponent(descriptionPanel);
-        
+
         add(mainSplitPane, BorderLayout.CENTER);
 
         // Input Panel
@@ -105,10 +105,10 @@ public class TaskManagerApp extends JFrame {
 
         JLabel taskDescriptionLabel = new JLabel("Task Description:");
         JTextField taskDescriptionField = new JTextField();
-        
+
         JLabel taskCategoryLabel = new JLabel("Category:");
         JComboBox<String> taskCategoryField = new JComboBox<>(Arrays.copyOfRange(categories, 1, categories.length));
-        
+
         JLabel taskPriorityLabel = new JLabel("Priority (1-5):");
         JComboBox<String> taskPriorityField = new JComboBox<>(Arrays.copyOfRange(priorities, 1, priorities.length));
 
@@ -119,16 +119,16 @@ public class TaskManagerApp extends JFrame {
 
         inputPanel.add(taskDescriptionLabel);
         inputPanel.add(taskDescriptionField);
-        
+
         inputPanel.add(taskCategoryLabel);
         inputPanel.add(taskCategoryField);
-        
+
         inputPanel.add(taskPriorityLabel);
         inputPanel.add(taskPriorityField);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(addButton);
-        
+
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(inputPanel, BorderLayout.CENTER);
         bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -176,7 +176,7 @@ public class TaskManagerApp extends JFrame {
         // Filter Action Listeners
         categoryFilter.addActionListener(e -> applyFilters(searchField.getText().trim().toLowerCase()));
         priorityFilter.addActionListener(e -> applyFilters(searchField.getText().trim().toLowerCase()));
-        
+
         // Reset Filter Button Action Listener
         resetFilterButton.addActionListener(e -> {
             searchField.setText("");
@@ -196,38 +196,38 @@ public class TaskManagerApp extends JFrame {
             }
         });
     }
-    
+
     // Method to apply filters and update the task list
     private void applyFilters(String searchQuery) {
         filteredTasks.clear();
-        
+
         String selectedCategory = (String) categoryFilter.getSelectedItem();
         String selectedPriority = (String) priorityFilter.getSelectedItem();
-        
+
         for (Task task : tasks) {
             boolean matchesSearch = searchQuery.isEmpty() || 
-                                   task.getTitle().toLowerCase().contains(searchQuery) || 
-                                   task.getDescription().toLowerCase().contains(searchQuery);
-            
+                    task.getTitle().toLowerCase().contains(searchQuery) || 
+                    task.getDescription().toLowerCase().contains(searchQuery);
+
             boolean matchesCategory = selectedCategory.equals("All Categories") || 
-                                     task.getCategory().equals(selectedCategory);
-            
+                    task.getCategory().equals(selectedCategory);
+
             boolean matchesPriority = selectedPriority.equals("All Priorities") || 
-                                     task.getPriority() == Integer.parseInt(selectedPriority);
-            
+                    task.getPriority() == Integer.parseInt(selectedPriority);
+
             if (matchesSearch && matchesCategory && matchesPriority) {
                 filteredTasks.add(task);
             }
         }
-        
+
         updateTaskList();
-        
+
         if (filteredTasks.isEmpty() && !searchQuery.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No tasks found matching your criteria.", 
-                                         "Search Result", JOptionPane.INFORMATION_MESSAGE);
+                    "Search Result", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-    
+
     // Method to update the task list display
     private void updateTaskList() {
         taskListModel.clear();
